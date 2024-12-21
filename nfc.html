@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <title>Web NFC Sample</title>
-    <script async="" src="./Web NFC Sample_files/analytics.js"></script><script>
+    <script async="" src="./Web NFC Sample_files/analytics.js"></script>
+    <script>
       // Add a global error event listener early on in the page load, to help ensure that browsers
       // which don't support specific functionality still end up displaying a meaningful message.
       window.addEventListener('error', function(error) {
@@ -42,6 +43,9 @@ format. Low-level I/O operations (e.g. ISO-DEP, NFC-A/B, NFC-F) and Host-based
 Card Emulation (HCE) are not supported within the current scope.
 </p>
 
+
+<label for="activationCode">Enter activation code:</label><br>
+<input type="text" id="activationCode" name="activationCode"><br><br>
 <button id="scanButton">Scan</button>
 <button id="writeButton">Write</button>
 
@@ -128,8 +132,11 @@ writeButton.addEventListener("click", async () => {
   log("User clicked write button");
 
   try {
+    // Get the activation code from the input field
+    var activationCode = document.getElementById("activationCode").value;
+
     const ndef = new NDEFReader();
-    await ndef.write("Hello world!");
+    await ndef.write("onboardingMethod:3\nonboardingDetail:" + activationCode);
     log("> Message written");
   } catch (error) {
     log("Argh! " + error);
