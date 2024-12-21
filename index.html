@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cisco 9800 Series Desk Phone NFC Utilities</title>
+</head>
+<body>
+
+    <h1>Cisco 9800 Series Desk Phone NFC Utilities.</h1>
+    Only Chrome browser v89 and later supported.
+
+    <h2>Activate the phone via Webex Calling activation code</h2>
+
+    <label for="activationCode">Enter activation code:</label><br>
+    <input type="text" id="activationCode" name="activationCode"><br><br>
+
+    <button onclick="activatePhone()">Activate</button>
+
+    <p id="status"></p>
+
+    <script>
+        if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)){
+          // Let's log a warning if the sample is not supposed to execute on this
+          // version of Chrome.
+          if (89 > parseInt(RegExp.$1)) {
+            document.getElementById("status").innerHTML = "Warning! This sample requires minimum Chrome browser version 89!";
+            // ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.');
+          }
+        }
+    </script>
+    <script>
+        if (!("NDEFReader" in window))
+          document.getElementById("status").innerHTML = "Web NFC is not available. Use Chrome on Android.";
+    </script>
+
+    <script>
+        async function activatePhone() {
+            // Get the activation code from the input field
+            var activationCode = document.getElementById("activationCode").value;
+
+            // Display "Activation in progress ..." message
+            document.getElementById("status").innerHTML = "Activation in progress...";
+
+            try {
+                const ndef = new NDEFReader();
+                await ndef.write("onboardingMethod:3\nonboardingDetail:" + activationCode);
+                document.getElementById("status").innerHTML = "Activation code written";
+            } catch (error) {
+                document.getElementById("status").innerHTML = "Argh! " + error;
+            }
+        }
+    </script>
+
+</body>
+</html>
